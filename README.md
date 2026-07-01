@@ -1,5 +1,7 @@
 # Photo to PDF
 
+[![Download latest release](https://img.shields.io/github/v/release/NikitaKrotenko/pdf_converter?label=Download&style=for-the-badge)](https://github.com/NikitaKrotenko/pdf_converter/releases/latest)
+
 A tiny app that combines your photos into a single PDF. Available as a
 desktop app for macOS and Windows, or as a command-line script.
 
