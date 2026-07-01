@@ -1,0 +1,57 @@
+name: Build desktop apps
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt py2app
+      - name: Build .app
+        run: python3 packaging/macos/setup.py py2app
+      - name: Zip .app
+        run: ditto -c -k --sequesterRsrc --keepParent "dist/Photo to PDF.app" "Photo-to-PDF-macOS.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Photo-to-PDF-macOS
+          path: Photo-to-PDF-macOS.zip
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt pyinstaller
+      - name: Build .exe
+        run: pyinstaller packaging/windows/PhotoToPDF.spec
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Photo-to-PDF-windows
+          path: dist/Photo to PDF.exe
+
+  release:
+    needs: [macos, windows]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/Photo-to-PDF-macOS/Photo-to-PDF-macOS.zip
+            artifacts/Photo-to-PDF-windows/Photo to PDF.exe
