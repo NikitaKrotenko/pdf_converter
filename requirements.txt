@@ -1,1 +1,3 @@
 Pillow
+python-telegram-bot[job-queue]==21.9
+python-dotenv

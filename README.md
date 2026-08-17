@@ -55,6 +55,39 @@ pip install -r requirements.txt
 python3 src/app.py
 ```
 
+## Telegram bot
+
+`src/bot.py` runs a Telegram bot that collects photos and sends back a PDF.
+
+Send photos one by one or as an album — the order they arrive in is the order
+they appear in the PDF. After each photo (or each album) the bot replies with
+"Send more photos, or press *Convert to PDF*" and a **Convert to PDF** button.
+Pressing it returns the finished PDF and clears the collection.
+
+Commands: `/start`, `/status` (how many photos are queued), `/clear`.
+
+### Setup
+
+1. Create a bot with [@BotFather](https://t.me/BotFather) and copy the token.
+2. Put the token in `.env` at the repo root (copy `.env.example` if it's
+   missing). `.env` is gitignored, so the token never gets committed:
+
+   ```
+   TELEGRAM_BOT_TOKEN=123456789:AAExampleTokenGoesHere
+   ```
+
+3. Install the dependencies and run it:
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate      # Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   python3 src/bot.py
+   ```
+
+The bot uses long polling, so it needs no public URL — it just has to keep
+running. Stop it with Ctrl+C.
+
 ## Command-line version
 
 `src/convert.py` converts every photo in the `input/` folder into a PDF in
